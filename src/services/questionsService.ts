@@ -64,7 +64,7 @@ async function getSingleQuestionById(id: number) {
     return getSingleQuestionByIdFromDB;
   }
 
-  if (!getSingleQuestionByIdFromDB?.question) {
+  if (!getSingleQuestionByIdFromDB) {
     return null;
   }
 }
