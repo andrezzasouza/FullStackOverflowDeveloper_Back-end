@@ -1,11 +1,11 @@
 import { v4 as uuid } from 'uuid';
-
+import { ValidationError } from 'joi';
 import * as usersRepository from '../repositories/usersRepository';
 import { userSchema } from '../validations/userSchema';
 import NewUser from '../interfaces/userInterface';
 
 async function validateUser(user: NewUser) {
-  const errors = userSchema.validate(user).error;
+  const errors: ValidationError = userSchema.validate(user).error;
 
   if (errors) {
     return errors;

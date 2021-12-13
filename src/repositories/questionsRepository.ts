@@ -100,7 +100,8 @@ async function getSingleQuestionByIdFromDB(id: number) {
   if (lookUpStatus.rows.length === 0) {
     return null;
   }
-  if (lookUpStatus?.rows[0]?.answered) {
+
+  if (lookUpStatus?.rows[0]?.answeredAt) {
     const result: QueryResult = await connection.query(
       `
         SELECT
@@ -136,10 +137,11 @@ async function getSingleQuestionByIdFromDB(id: number) {
       `,
       [id]
     );
-    return result.rows[0];
+    const answered = result.rows[0];
+    return answered;
   }
 
-  if (!lookUpStatus.rows[0].answered) {
+  if (!lookUpStatus?.rows[0].answeredAt) {
     const result: QueryResult = await connection.query(
       `
       SELECT
@@ -165,7 +167,8 @@ async function getSingleQuestionByIdFromDB(id: number) {
       `,
       [id]
     );
-    return result.rows[0];
+    const notAnswered = result.rows[0];
+    return notAnswered;
   }
 }
 
