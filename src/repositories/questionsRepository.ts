@@ -69,4 +69,17 @@ async function addQuestionToDB(question: NewQuestion) {
   return result.rows[0].id;
 }
 
-export { searchQuestionInDB, addQuestionToDB };
+async function getAllUnansweredFromDB() {
+  const result: QueryResult = await connection.query(
+    `
+      SELECT questions.id, questions.question, questions.student, questions."submitAt", classes.class
+      FROM questions
+      JOIN classes ON questions.class_id = classes.id
+      WHERE answered = $1
+    `, [false]
+  )
+
+  return result.rows;
+}
+
+export { searchQuestionInDB, addQuestionToDB,getAllUnansweredFromDB };
