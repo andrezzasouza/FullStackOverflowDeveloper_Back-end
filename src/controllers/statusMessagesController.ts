@@ -13,9 +13,9 @@ const mainMessage = `
   <p> Apart from this one, these are the available routes:</p>
   <ul>
     <li>POST /questions</li>
-    <li>POST /questions/:id</li>
     <li>GET /questions/:id</li>
-    <li>GET /recommendations/random</li>
+    <li>POST /questions/:id</li>
+    <li>GET /questions</li>
     <li>POST /users</li>
     <li>GET /health</li>
   </ul>

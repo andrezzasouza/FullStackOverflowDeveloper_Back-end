@@ -53,4 +53,34 @@ async function getQuestions(req: Request, res: Response) {
   }
 }
 
-export { addQuestion, getQuestions };
+async function getQuestionById(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.sendStatus(400);
+    }
+
+    const numId: number = Number(id);
+
+    const idFormat = await questionsService.validateId(numId);
+
+    if (idFormat) {
+      return res.status(400).send({ message: idFormat.details[0].message });
+    }
+    
+    const getSingleQuestionById = await questionsService.getSingleQuestionById(numId);
+
+    if (!getSingleQuestionById) {
+      return res.status(404).send({ message: "There are no questions with this id. Please, check and try again."});
+    }
+
+    if (getSingleQuestionById) {
+      return res.status(200).send(getSingleQuestionById);
+    }
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+}
+
+export { addQuestion, getQuestions, getQuestionById };

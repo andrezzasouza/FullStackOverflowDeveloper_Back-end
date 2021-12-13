@@ -22,7 +22,7 @@ async function addUserToDB(user: AddUser) {
       SELECT id FROM classes
       WHERE class = $1
     `, [user.class]
-  )
+  );
 
   if (getClass.rowCount === 0) {
     return null;
@@ -34,7 +34,7 @@ async function addUserToDB(user: AddUser) {
       VALUES ($1, $2, $3)
       RETURNING token
     `, [user.name, getClass.rows[0].id, user.token]
-  )
+  );
 
   return result.rows[0];
 }
