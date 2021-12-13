@@ -32,12 +32,10 @@ async function addQuestion(req: Request, res: Response) {
     }
 
     if (questionExists === null) {
-      return res
-        .status(404)
-        .send({
-          message:
-            "The selected class doesn't exist. Please, check and try again."
-        });
+      return res.status(404).send({
+        message:
+          "The selected class doesn't exist. Please, check and try again."
+      });
     }
 
     const registerQuestion: number = await questionsService.addNewQuestion(
@@ -91,12 +89,10 @@ async function getQuestionById(req: Request, res: Response) {
     );
 
     if (!getSingleQuestionById) {
-      return res
-        .status(404)
-        .send({
-          message:
-            'There are no questions with this id. Please, check and try again.'
-        });
+      return res.status(404).send({
+        message:
+          'There are no questions with this id. Please, check and try again.'
+      });
     }
 
     if (getSingleQuestionById) {

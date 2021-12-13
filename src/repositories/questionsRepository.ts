@@ -97,8 +97,10 @@ async function getSingleQuestionByIdFromDB(id: number) {
     `,
     [id]
   );
-
-  if (lookUpStatus.rows[0].answered) {
+  if (lookUpStatus.rows.length === 0) {
+    return null;
+  }
+  if (lookUpStatus?.rows[0]?.answered) {
     const result: QueryResult = await connection.query(
       `
         SELECT
