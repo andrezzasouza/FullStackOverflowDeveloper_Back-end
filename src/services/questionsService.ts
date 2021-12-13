@@ -12,17 +12,21 @@ async function validateQuestion(question: NewQuestion) {
 
 async function checkExistentQuestions(question: NewQuestion) {
   const searchQuestionInDB = await questionsRepository.searchQuestionInDB(question);
-
-  if (searchQuestionInDB.length > 0) {
+  
+  if (searchQuestionInDB?.question) {
     return searchQuestionInDB;
+  }
+
+  if (searchQuestionInDB === null) {
+    return null;
   }
 }
 
 async function addNewQuestion(question: NewQuestion) {
-  const addQuestionToDB = await questionsRepository.addQuestionToDB(question);
+  const addQuestionToDB: (number) = await questionsRepository.addQuestionToDB(question);
 
-  if (addQuestionToDB.id) {
-    return addQuestionToDB.id;
+  if (addQuestionToDB) {
+    return addQuestionToDB;
   }
   
 }
