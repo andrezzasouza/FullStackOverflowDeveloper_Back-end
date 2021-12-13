@@ -13,7 +13,7 @@ async function addUser(req: Request, res: Response) {
     const userFormat = await usersService.validateUser(user);
 
     if (userFormat) {
-      return res.status(400).send({ message: userFormat.details[0].message })
+      return res.status(400).send({ message: userFormat.details[0].message });
     }
 
     const userExists = await usersService.checkExistentUsers(user);

@@ -1,5 +1,6 @@
 import * as questionsRepository from '../repositories/questionsRepository';
 import { questionSchema } from '../validations/questionSchema';
+import { idSchema } from '../validations/idSchema';
 import NewQuestion from '../interfaces/questionInterface';
 
 async function validateQuestion(question: NewQuestion) {
@@ -23,7 +24,7 @@ async function checkExistentQuestions(question: NewQuestion) {
 }
 
 async function addNewQuestion(question: NewQuestion) {
-  const addQuestionToDB: (number) = await questionsRepository.addQuestionToDB(question);
+  const addQuestionToDB: number = await questionsRepository.addQuestionToDB(question);
 
   if (addQuestionToDB) {
     return addQuestionToDB;
@@ -33,13 +34,34 @@ async function addNewQuestion(question: NewQuestion) {
 
 async function getAllUnanswered() {
   const getAllUnansweredFromDB: object[] = await questionsRepository.getAllUnansweredFromDB();
-  if (getAllUnansweredFromDB.length > 0) {
+
+  if (getAllUnansweredFromDB?.length > 0) {
     return getAllUnansweredFromDB;
   }
 
-  if (getAllUnansweredFromDB.length === 0) {
+  if (getAllUnansweredFromDB?.length === 0) {
     return null;
   }
 }
 
-export { validateQuestion, checkExistentQuestions, addNewQuestion, getAllUnanswered };
+async function validateId(id: number) {
+  const errors = idSchema.validate({id}).error;
+
+  if (errors) {
+    return errors;
+  }
+}
+
+async function getSingleQuestionById(id: number) {
+  const getSingleQuestionByIdFromDB = await questionsRepository.getSingleQuestionByIdFromDB(id);
+
+  if (getSingleQuestionByIdFromDB?.question) {
+    return getSingleQuestionByIdFromDB;
+  }
+
+  if (!getSingleQuestionByIdFromDB?.question) {
+    return null;
+  }
+}
+
+export { validateQuestion, checkExistentQuestions, addNewQuestion, getAllUnanswered, validateId, getSingleQuestionById };
