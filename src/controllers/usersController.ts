@@ -21,21 +21,24 @@ async function addUser(req: Request, res: Response) {
     if (userExists) {
       return res.sendStatus(409);
     }
-    
+
     const registerUser = await usersService.addNewUser(user);
 
     if (!registerUser) {
-      return res.status(404).send({ message: "The selected class doesn't exist. Please, check and try again."});
+      return res
+        .status(404)
+        .send({
+          message:
+            "The selected class doesn't exist. Please, check and try again."
+        });
     }
 
     if (registerUser) {
       return res.status(201).send(registerUser);
     }
-    
   } catch (err) {
     return res.sendStatus(500);
   }
-  
 }
 
-export { addUser }
+export { addUser };

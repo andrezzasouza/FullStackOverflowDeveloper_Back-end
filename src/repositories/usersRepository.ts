@@ -10,8 +10,9 @@ async function searchUserInDB(user: NewUser) {
     `
       SELECT * FROM users
       WHERE name = $1
-    `, [user.name]
-  )
+    `,
+    [user.name]
+  );
 
   return result.rowCount;
 }
@@ -21,7 +22,8 @@ async function addUserToDB(user: AddUser) {
     `
       SELECT id FROM classes
       WHERE class = $1
-    `, [user.class]
+    `,
+    [user.class]
   );
 
   if (getClass.rowCount === 0) {
@@ -33,10 +35,11 @@ async function addUserToDB(user: AddUser) {
       INSERT INTO users (name, class_id, token)
       VALUES ($1, $2, $3)
       RETURNING token
-    `, [user.name, getClass.rows[0].id, user.token]
+    `,
+    [user.name, getClass.rows[0].id, user.token]
   );
 
   return result.rows[0];
 }
 
-export { searchUserInDB, addUserToDB }
+export { searchUserInDB, addUserToDB };

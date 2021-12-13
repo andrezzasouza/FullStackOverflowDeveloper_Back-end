@@ -28,11 +28,10 @@ async function addNewUser(user: NewUser) {
   if (!addUserToDB) {
     return null;
   }
-  
+
   if (addUserToDB?.token) {
     return addUserToDB.token;
   }
-
 }
 
 export { validateUser, checkExistentUsers, addNewUser };

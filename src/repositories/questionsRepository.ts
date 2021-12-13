@@ -7,7 +7,8 @@ async function searchQuestionInDB(question: NewQuestion) {
     `
       SELECT id FROM classes
       WHERE class = $1
-    `, [question.class]
+    `,
+    [question.class]
   );
 
   if (getClass.rowCount === 0) {
@@ -20,7 +21,8 @@ async function searchQuestionInDB(question: NewQuestion) {
       WHERE question = $1
       AND student = $2
       AND class_id = $3
-    `, [question.question, question.student, getClass.rows[0].id]
+    `,
+    [question.question, question.student, getClass.rows[0].id]
   );
 
   return result.rows[0];
@@ -31,14 +33,16 @@ async function addQuestionToDB(question: NewQuestion) {
     `
       SELECT id FROM classes
       WHERE class = $1
-    `, [question.class]
+    `,
+    [question.class]
   );
 
   let getTagId: QueryResult = await connection.query(
     `
       SELECT id FROM tags
       WHERE tags = $1
-    `, [question.tags]
+    `,
+    [question.tags]
   );
 
   if (getTagId.rowCount === 0) {
@@ -47,25 +51,28 @@ async function addQuestionToDB(question: NewQuestion) {
         INSERT INTO tags (tags)
         VALUES ($1)
         RETURNING id
-      `, [question.tags]
+      `,
+      [question.tags]
     );
   }
-  
+
   const result: QueryResult = await connection.query(
     `
       INSERT INTO questions (question, student, class_id)
       VALUES ($1, $2, $3)
       RETURNING id
-    `, [question.question, question.student, getClass.rows[0].id]
+    `,
+    [question.question, question.student, getClass.rows[0].id]
   );
 
   await connection.query(
     `
       INSERT INTO questions_tags (questions_id, tags_id)
       VALUES ($1, $2)
-    `, [result.rows[0].id, getTagId.rows[0].id]
+    `,
+    [result.rows[0].id, getTagId.rows[0].id]
   );
-  
+
   return result.rows[0].id;
 }
 
@@ -76,7 +83,8 @@ async function getAllUnansweredFromDB() {
       FROM questions
       JOIN classes ON questions.class_id = classes.id
       WHERE answered = $1
-    `, [false]
+    `,
+    [false]
   );
 
   return result.rows;
@@ -86,7 +94,8 @@ async function getSingleQuestionByIdFromDB(id: number) {
   const lookUpStatus = await connection.query(
     `
       SELECT * FROM questions WHERE id = $1
-    `, [id]
+    `,
+    [id]
   );
 
   if (lookUpStatus.rows[0].answered) {
@@ -122,11 +131,12 @@ async function getSingleQuestionByIdFromDB(id: number) {
           answers.user_id = users.id
         WHERE
           questions.id = $1
-      `, [id]
+      `,
+      [id]
     );
     return result.rows[0];
   }
-  
+
   if (!lookUpStatus.rows[0].answered) {
     const result: QueryResult = await connection.query(
       `
@@ -150,12 +160,11 @@ async function getSingleQuestionByIdFromDB(id: number) {
           questions.class_id = classes.id
         WHERE
           questions.id = $1
-      `, [id]
+      `,
+      [id]
     );
     return result.rows[0];
   }
-
-  
 }
 
 export {
