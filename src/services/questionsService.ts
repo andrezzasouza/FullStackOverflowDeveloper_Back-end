@@ -12,8 +12,10 @@ async function validateQuestion(question: NewQuestion) {
 }
 
 async function checkExistentQuestions(question: NewQuestion) {
-  const searchQuestionInDB = await questionsRepository.searchQuestionInDB(question);
-  
+  const searchQuestionInDB = await questionsRepository.searchQuestionInDB(
+    question
+  );
+
   if (searchQuestionInDB?.question) {
     return searchQuestionInDB;
   }
@@ -24,16 +26,18 @@ async function checkExistentQuestions(question: NewQuestion) {
 }
 
 async function addNewQuestion(question: NewQuestion) {
-  const addQuestionToDB: number = await questionsRepository.addQuestionToDB(question);
+  const addQuestionToDB: number = await questionsRepository.addQuestionToDB(
+    question
+  );
 
   if (addQuestionToDB) {
     return addQuestionToDB;
   }
-  
 }
 
 async function getAllUnanswered() {
-  const getAllUnansweredFromDB: object[] = await questionsRepository.getAllUnansweredFromDB();
+  const getAllUnansweredFromDB: object[] =
+    await questionsRepository.getAllUnansweredFromDB();
 
   if (getAllUnansweredFromDB?.length > 0) {
     return getAllUnansweredFromDB;
@@ -45,7 +49,7 @@ async function getAllUnanswered() {
 }
 
 async function validateId(id: number) {
-  const errors = idSchema.validate({id}).error;
+  const errors = idSchema.validate({ id }).error;
 
   if (errors) {
     return errors;
@@ -53,7 +57,8 @@ async function validateId(id: number) {
 }
 
 async function getSingleQuestionById(id: number) {
-  const getSingleQuestionByIdFromDB = await questionsRepository.getSingleQuestionByIdFromDB(id);
+  const getSingleQuestionByIdFromDB =
+    await questionsRepository.getSingleQuestionByIdFromDB(id);
 
   if (getSingleQuestionByIdFromDB?.question) {
     return getSingleQuestionByIdFromDB;
@@ -64,4 +69,11 @@ async function getSingleQuestionById(id: number) {
   }
 }
 
-export { validateQuestion, checkExistentQuestions, addNewQuestion, getAllUnanswered, validateId, getSingleQuestionById };
+export {
+  validateQuestion,
+  checkExistentQuestions,
+  addNewQuestion,
+  getAllUnanswered,
+  validateId,
+  getSingleQuestionById
+};
