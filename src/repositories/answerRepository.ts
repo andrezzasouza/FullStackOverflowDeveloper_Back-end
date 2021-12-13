@@ -1,7 +1,7 @@
 import { QueryResult } from 'pg';
 import connection from '../database/database';
 
-async function checkDataExistanceInDB(token: string, id: number) {
+async function checkDataExistanceInDB(id: number) {
   const lookForQuestion: QueryResult = await connection.query(
     `
       SELECT * FROM questions
@@ -10,10 +10,7 @@ async function checkDataExistanceInDB(token: string, id: number) {
     [id]
   );
 
-  if (lookForQuestion.rowCount > 0) {
-    return lookForQuestion;
-  }
-  return null;
+  return lookForQuestion.rows[0];
 }
 
 async function addNewAnswerToDB(answer: string, token: string, id: number) {
@@ -42,7 +39,8 @@ async function addNewAnswerToDB(answer: string, token: string, id: number) {
       SET
         answer_id = $1,
         answered = $2
-      WHERE questions.id = $3
+      WHERE
+        questions.id = $3
       RETURNING *
     `,
     [addAnswer.rows[0].id, true, id]

@@ -13,21 +13,22 @@ async function validateIdAnswer(id: number, answer: string) {
   }
 }
 
-async function checkDataExistance(token: string, id: number) {
+async function checkDataExistance(id: number) {
   const checkDataExistanceInDB = await answerRepository.checkDataExistanceInDB(
-    token,
     id
   );
 
-  if (checkDataExistanceInDB) {
-    return 'user';
+  if (checkDataExistanceInDB?.question && checkDataExistanceInDB?.answered) {
+    return 'answered';
   }
-  if (checkDataExistanceInDB)
-    if (checkDataExistanceInDB) {
-      return true;
-    }
 
-  return null;
+  if (checkDataExistanceInDB?.question && !checkDataExistanceInDB?.answered) {
+    return 'unanswered';
+  }
+
+  if (!checkDataExistanceInDB?.question) {
+    return null;
+  }
 }
 
 async function addNewAnswer(answer: string, token: string, id: number) {
@@ -37,16 +38,8 @@ async function addNewAnswer(answer: string, token: string, id: number) {
     id
   );
 
-  if (addNewAnswerToDB === null) {
-    return null;
-  }
-
-  if (!addNewAnswerToDB.answered) {
+  if (addNewAnswerToDB?.question && addNewAnswerToDB?.answered) {
     return true;
-  }
-
-  if (addNewAnswerToDB.answered) {
-    return false;
   }
 }
 

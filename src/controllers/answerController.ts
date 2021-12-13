@@ -23,10 +23,7 @@ async function addAnswer(req: Request, res: Response) {
         .send({ message: idFormatAnswer.details[0].message });
     }
 
-    const checkDataExistance = await answerService.checkDataExistance(
-      token,
-      numId
-    );
+    const checkDataExistance = await answerService.checkDataExistance(numId);
 
     if (checkDataExistance === null) {
       return res.status(404).send({
@@ -35,7 +32,7 @@ async function addAnswer(req: Request, res: Response) {
       });
     }
 
-    if (!checkDataExistance === true) {
+    if (checkDataExistance === 'answered') {
       return res.status(409).send({
         message:
           'This questions has already been answered. Please, choose another question.'
@@ -48,7 +45,6 @@ async function addAnswer(req: Request, res: Response) {
       return res.sendStatus(201);
     }
   } catch (err) {
-    console.log(err);
     return res.sendStatus(500);
   }
 }
