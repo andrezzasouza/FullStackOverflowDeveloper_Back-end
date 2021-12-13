@@ -31,4 +31,15 @@ async function addNewQuestion(question: NewQuestion) {
   
 }
 
-export { validateQuestion, checkExistentQuestions, addNewQuestion };
+async function getAllUnanswered() {
+  const getAllUnansweredFromDB: object[] = await questionsRepository.getAllUnansweredFromDB();
+  if (getAllUnansweredFromDB.length > 0) {
+    return getAllUnansweredFromDB;
+  }
+
+  if (getAllUnansweredFromDB.length === 0) {
+    return null;
+  }
+}
+
+export { validateQuestion, checkExistentQuestions, addNewQuestion, getAllUnanswered };

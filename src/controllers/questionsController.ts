@@ -37,4 +37,20 @@ async function addQuestion(req: Request, res: Response) {
   }
 }
 
-export { addQuestion };
+async function getQuestions(req: Request, res: Response) {
+  try {
+    const getAllQuestions = await questionsService.getAllUnanswered();
+    
+    if (!getAllQuestions) {
+      return res.status(204).send({ message: 'There are no unanswered questions. Submit one!'})
+    }
+
+    if (getAllQuestions) {
+      return res.status(200).send(getAllQuestions);
+    }
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+}
+
+export { addQuestion, getQuestions };
