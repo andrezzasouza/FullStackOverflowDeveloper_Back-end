@@ -14,9 +14,9 @@ const mainMessage = `
   <ul>
     <li>POST /questions</li>
     <li>POST /questions/:id</li>
-    <li>POST /recommendations/:id/downvote</li>
+    <li>GET /questions/:id</li>
     <li>GET /recommendations/random</li>
-    <li>GET /recommendations/top/:amount</li>
+    <li>POST /users</li>
     <li>GET /health</li>
   </ul>
   <p>

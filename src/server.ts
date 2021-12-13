@@ -1,4 +1,4 @@
-/* eslint-disable import/no-unresolved */
+import './setup';
 import app from './app';
 
 app.listen(process.env.PORT);

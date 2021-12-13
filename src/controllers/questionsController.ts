@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import * as questionsService from '../services/questionsService';
 import NewQuestion from '../interfaces/questionInterface';
 
-// add type to consts
-
 async function addQuestion(req: Request, res: Response) {
   try {
     const question: NewQuestion = req.body;
