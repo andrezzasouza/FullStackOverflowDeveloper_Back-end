@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/questions', questionsRouter);
-app.use('/user', usersRouter);
+app.use('/users', usersRouter);
 app.use(messagesRouter);
 
 export default app;
