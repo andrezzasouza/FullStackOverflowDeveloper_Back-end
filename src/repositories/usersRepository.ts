@@ -10,19 +10,32 @@ async function searchUserInDB(user: NewUser) {
     `
       SELECT * FROM users
       WHERE name = $1
-      AND class = $2
-    `, [user.name, user.class]
+    `, [user.name]
   )
-  return result.rows[0];
+
+  return result.rowCount;
 }
+
 async function addUserToDB(user: AddUser) {
+  const getClass = await connection.query(
+    `
+      SELECT id FROM classes
+      WHERE class = $1
+    `, [user.class]
+  )
+
+  if (getClass.rowCount === 0) {
+    return null;
+  }
+
   const result = await connection.query(
     `
-      INSERT INTO users (name, class, token)
+      INSERT INTO users (name, class_id, token)
       VALUES ($1, $2, $3)
-      RETURNING token;
-    `, [user.name, user.class, user.token]
+      RETURNING token
+    `, [user.name, getClass.rows[0].id, user.token]
   )
+
   return result.rows[0];
 }
 

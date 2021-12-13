@@ -21,12 +21,17 @@ async function addUser(req: Request, res: Response) {
     if (userExists) {
       return res.sendStatus(409);
     }
-
+    
     const registerUser = await usersService.addNewUser(user);
+
+    if (!registerUser) {
+      return res.sendStatus(404);
+    }
 
     if (registerUser) {
       return res.status(201).send(registerUser);
     }
+    
   } catch (err) {
     return res.sendStatus(500);
   }

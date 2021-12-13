@@ -15,7 +15,7 @@ async function validateUser(user: NewUser) {
 async function checkExistentUsers(user: NewUser) {
   const searchUserInDB = await usersRepository.searchUserInDB(user);
 
-  if (searchUserInDB.length > 0) {
+  if (searchUserInDB > 0) {
     return searchUserInDB;
   }
 }
@@ -25,9 +25,14 @@ async function addNewUser(user: NewUser) {
 
   const addUserToDB = await usersRepository.addUserToDB({ ...user, token });
 
-  if (addUserToDB.token) {
+  if (!addUserToDB) {
+    return null;
+  }
+  
+  if (addUserToDB?.token) {
     return addUserToDB.token;
   }
+
 }
 
 export { validateUser, checkExistentUsers, addNewUser };
