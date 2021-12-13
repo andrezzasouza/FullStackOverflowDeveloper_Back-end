@@ -1,10 +1,13 @@
+import dayjs from 'dayjs';
+import { ValidationError } from 'joi';
 import * as questionsRepository from '../repositories/questionsRepository';
+import { Answered, NotAnswered } from '../interfaces/answerInterface';
 import { questionSchema } from '../validations/questionSchema';
 import { idSchema } from '../validations/idSchema';
 import NewQuestion from '../interfaces/questionInterface';
 
 async function validateQuestion(question: NewQuestion) {
-  const errors = questionSchema.validate(question).error;
+  const errors: ValidationError = questionSchema.validate(question).error;
 
   if (errors) {
     return errors;
@@ -36,11 +39,18 @@ async function addNewQuestion(question: NewQuestion) {
 }
 
 async function getAllUnanswered() {
-  const getAllUnansweredFromDB: object[] =
+  const getAllUnansweredFromDB =
     await questionsRepository.getAllUnansweredFromDB();
 
   if (getAllUnansweredFromDB?.length > 0) {
-    return getAllUnansweredFromDB;
+    const FormattedDate = dayjs(getAllUnansweredFromDB[0]?.submitAt).format(
+      'YYYY-MM-DD HH:mm'
+    );
+    const FormattedQuestions = {
+      ...getAllUnansweredFromDB,
+      submitAt: FormattedDate
+    };
+    return FormattedQuestions;
   }
 
   if (getAllUnansweredFromDB?.length === 0) {
@@ -49,7 +59,7 @@ async function getAllUnanswered() {
 }
 
 async function validateId(id: number) {
-  const errors = idSchema.validate({ id }).error;
+  const errors: ValidationError = idSchema.validate({ id }).error;
 
   if (errors) {
     return errors;
@@ -60,8 +70,31 @@ async function getSingleQuestionById(id: number) {
   const getSingleQuestionByIdFromDB =
     await questionsRepository.getSingleQuestionByIdFromDB(id);
 
-  if (getSingleQuestionByIdFromDB?.question) {
-    return getSingleQuestionByIdFromDB;
+  if (!getSingleQuestionByIdFromDB?.answeredAt) {
+    const FormattedDate = dayjs(getSingleQuestionByIdFromDB?.submitAt).format(
+      'YYYY-MM-DD HH:mm'
+    );
+    const newDataObject: NotAnswered = {
+      ...getSingleQuestionByIdFromDB,
+      submitAt: FormattedDate
+    };
+    return newDataObject;
+  }
+
+  if (getSingleQuestionByIdFromDB?.answeredAt) {
+    const answeredQuestion: Answered = getSingleQuestionByIdFromDB;
+    const FormattedDateSubmit = dayjs(answeredQuestion?.submitAt).format(
+      'YYYY-MM-DD HH:mm'
+    );
+    const FormattedDateAnswer = dayjs(answeredQuestion?.answeredAt).format(
+      'YYYY-MM-DD HH:mm'
+    );
+    const newDataObject: Answered = {
+      ...answeredQuestion,
+      submitAt: FormattedDateSubmit,
+      answeredAt: FormattedDateAnswer
+    };
+    return newDataObject;
   }
 
   if (!getSingleQuestionByIdFromDB) {

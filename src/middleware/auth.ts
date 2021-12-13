@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { ValidationError } from 'joi';
 import connection from '../database/database';
 import { tokenSchema } from '../validations/tokenSchema';
 
@@ -16,7 +17,7 @@ async function answerMiddleware(
       .send({ message: 'Denied access. Please, try again!' });
   }
 
-  const errors = tokenSchema.validate({ token }).error;
+  const errors: ValidationError = tokenSchema.validate({ token }).error;
 
   if (errors) {
     return res.status(400).send({ message: errors.details[0].message });
