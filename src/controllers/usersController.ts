@@ -25,7 +25,7 @@ async function addUser(req: Request, res: Response) {
     const registerUser = await usersService.addNewUser(user);
 
     if (!registerUser) {
-      return res.sendStatus(404);
+      return res.status(404).send({ message: "The selected class doesn't exist. Please, check and try again."});
     }
 
     if (registerUser) {

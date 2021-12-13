@@ -13,23 +13,23 @@ async function addQuestion(req: Request, res: Response) {
     const questionFormat = await questionsService.validateQuestion(question);
 
     if (questionFormat) {
-      return res.sendStatus(400);
-    }
-
-    if (questionFormat) {
       return res.status(400).send({ message: questionFormat.details[0].message });
     }
-
+    
     const questionExists = await questionsService.checkExistentQuestions(question);
-
+    
     if (questionExists) {
       return res.sendStatus(409);
     }
 
-    const registerQuestion = await questionsService.addNewQuestion(question);
+    if (questionExists === null) {
+      return res.status(404).send({ message: "The selected class doesn't exist. Please, check and try again."});
+    }
+    
+    const registerQuestion: number = await questionsService.addNewQuestion(question);
 
     if (registerQuestion) {
-      return res.status(201).send(registerQuestion);
+      return res.status(201).send(registerQuestion.toString());
     }
 
   } catch (err) {
